@@ -1,0 +1,51 @@
+<h1>Image Manipulation</h1>
+
+<div class="container" *ngIf=" this.finalSave">
+    <div class="custom-dropzone" ngx-dropzone [accept]="'image/*'" (change)="onSelect($event)">
+        <ngx-dropzone-label>
+            <div>
+                <h2>Drop Here...!</h2>
+            </div>
+        </ngx-dropzone-label>
+        <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of files" [file]="f"
+            [removable]="true" (removed)="onRemove(f)">
+            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+        </ngx-dropzone-image-preview>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6" *ngIf="this.files.length>0">
+            <h1>Preview</h1>
+            <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true" [aspectRatio]="4 / 3"
+                format="png" (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()"></image-cropper>
+
+
+        </div>
+        <div class="col-md-6" *ngIf="this.croppedImage!=''">
+            <app-image-viewer [heading]="'Cropped Image'" [croppedImage]="this.croppedImage"></app-image-viewer>
+        </div>
+    </div>
+
+    <button *ngIf="this.croppedImage!=''" (click)="displaylist()" style="margin-bottom: 30px;">
+        Save
+    </button>
+</div>
+<div class="row" *ngIf="! this.finalSave">
+    <div class="container">
+
+        <div class="col-md-12">
+            <app-image-viewer [heading]="'Resultant Cropped Image'" [croppedImage]="this.croppedImage">
+            </app-image-viewer>
+            <br>
+            <h6 style="padding: 10px;font-weight: bold;">Image Name: {{ (this.fileName.length>12)? (this.fileName |
+                slice:0:12)+'..'+(this.fileName |
+                slice:-6):(this.fileName) }}</h6>
+            <br>
+            <button (click)="refresh()" style="margin-bottom: 30px;">
+                Exit
+            </button>
+
+        </div>
+    </div>
+</div>
